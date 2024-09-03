@@ -1,8 +1,9 @@
+from contextlib import contextmanager
+from typing import Generator
+
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import sessionmaker
-
-from contextlib import contextmanager
 
 from app.core.config import settings
 
@@ -22,4 +23,9 @@ SessionLocalPG = sessionmaker(
 
 
 @contextmanager
-def postgres_session() ->
+def postgres_session() -> Generator:
+    session = SessionLocalPG()
+    try:
+        yield session
+    finally:
+        session.close()
