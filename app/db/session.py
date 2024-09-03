@@ -1,0 +1,25 @@
+from sqlalchemy import create_engine
+from sqlalchemy.engine import Engine
+from sqlalchemy.orm import sessionmaker
+
+from contextlib import contextmanager
+
+from app.core.config import settings
+
+
+def create_postgres_engine() -> Engine:
+    return create_engine(settings.POSTGRES_URL, pool_pre_ping=True)
+
+
+postgres_engine = create_postgres_engine()
+
+engines = {"postres": postgres_engine}
+
+
+SessionLocalPG = sessionmaker(
+    autoflush=False, bind=engines["postgres"]
+)
+
+
+@contextmanager
+def postgres_session() ->
