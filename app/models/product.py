@@ -1,17 +1,16 @@
-from datetime import datetime
-
-from sqlalchemy import UUID, Column, Date, DateTime, Double, Integer, String
+from sqlalchemy import UUID, Column, Double, ForeignKey, String
 from sqlalchemy.orm import relationship
 
 from app.db.base_class import Base
 
 
-class User(Base):
-    __tablename__ = "user"
+class Product(Base):
+    __tablename__ = "products"
 
     id = Column(UUID, primary_key=True)
     name = Column(String(50), nullable=False, unique=True)
     description = Column(String(500), nullable=False)
-    category_id = Column()
+    categories = relationship("Product_Category", backref="product")
+    wishlists = relationship("Product_Wishlist", backref="product")
     price = Column(Double, nullable=False)
-    shop = Column()
+    shop_id = Column(UUID, ForeignKey('shops.id'))
