@@ -9,4 +9,5 @@ class Cart(Base):
 
     id = Column(UUID, primary_key=True)
     user_id = relationship("User", backref='cart', uselist=False)
-    total = Column(Double)
+    items = relationship("Cart_Item")
+    total = Column(Double, default=0.0, nullable=False)

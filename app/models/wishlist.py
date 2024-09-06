@@ -11,7 +11,7 @@ class Wishlist(Base):
 
     id = Column(UUID, primary_key=True)
     user_id = relationship("User", backref="wishlist", uselist=False)
-    product_id = Column()
+    products = relationship("Product_Wishlist", backref="wishlist")
     created_on = Column(DateTime(), default=datetime.now)
     updated_on = Column(DateTime(), default=datetime.now,
                         onupdate=datetime.now)

@@ -14,3 +14,6 @@ class Product(Base):
     wishlists = relationship("Product_Wishlist", backref="product")
     price = Column(Double, nullable=False)
     shop_id = Column(UUID, ForeignKey('shops.id'))
+    orders = relationship("Order_Product", backref='product')
+    sku = relationship(
+        "ProductSku", backref="product", uselist=False)
