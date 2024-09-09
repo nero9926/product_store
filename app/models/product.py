@@ -5,7 +5,7 @@ from app.db.base_class import Base
 
 
 class Product(Base):
-    __tablename__ = "products"
+    __tablename__ = "product"
 
     id = Column(UUID, primary_key=True)
     name = Column(String(50), nullable=False, unique=True)
@@ -13,7 +13,7 @@ class Product(Base):
     categories = relationship("Product_Category", backref="product")
     wishlists = relationship("Product_Wishlist", backref="product")
     price = Column(Double, nullable=False)
-    shop_id = Column(UUID, ForeignKey('shops.id'))
+    shop_id = Column(UUID, ForeignKey('shop.id'))
     orders = relationship("Order_Product", backref='product')
     sku = relationship(
         "ProductSku", backref="product", uselist=False)

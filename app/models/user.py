@@ -10,7 +10,7 @@ class User(Base):
     __tablename__ = "user"
 
     id = Column(UUID, primary_key=True)
-    avatar = Column()
+    avatar = Column(String(50))
     first_name = Column(String(50), nullable=False)
     last_name = Column(String(50), nullable=False)
     username = Column(String(50), nullable=False, unique=True)

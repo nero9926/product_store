@@ -7,7 +7,7 @@ from app.db.base_class import Base
 
 
 class Order(Base):
-    __tablename__ = "orders"
+    __tablename__ = "order"
 
     id = Column(UUID, primary_key=True)
     products = relationship("Order_Product", backref="order")
