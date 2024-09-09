@@ -17,7 +17,6 @@ class User(Base):
     email = Column(String(50), nullable=False, unique=True)
     date_of_birth = Column(Date(), nullable=False)
     orders = relationship("Orders")
-    favorites = relationship()
     created_on = Column(DateTime(), default=datetime.now)
     updated_on = Column(DateTime(), default=datetime.now,
                         onupdate=datetime.now)

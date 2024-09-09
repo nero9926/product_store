@@ -14,7 +14,7 @@ def create_postgres_engine() -> Engine:
 
 postgres_engine = create_postgres_engine()
 
-engines = {"postres": postgres_engine}
+engines = {"postgres": postgres_engine}
 
 
 SessionLocalPG = sessionmaker(
