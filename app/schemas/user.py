@@ -1,12 +1,12 @@
 from datetime import date, datetime
 
-from pydantic import Field
+from pydantic import UUID4, Field
 
 from app.schemas import BaseSchema
 
 
 class UserOut(BaseSchema):
-    id: int
+    id: UUID4
     first_name: str
     last_name: str
     username: str

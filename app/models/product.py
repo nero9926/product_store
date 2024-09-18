@@ -15,5 +15,6 @@ class Product(Base):
     price = Column(Double, nullable=False)
     shop_id = Column(UUID, ForeignKey('shop.id'))
     orders = relationship("Order_Product", backref='product')
+    carts = relationship("Cart_Item", backref="product")
     sku = relationship(
         "ProductSku", backref="product", uselist=False)

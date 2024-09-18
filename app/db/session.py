@@ -18,7 +18,7 @@ engines = {"postgres": postgres_engine}
 
 
 SessionLocalPG = sessionmaker(
-    autoflush=False, bind=engines["postgres"]
+    autocommit=False, autoflush=False, bind=engines["postgres"]
 )
 
 

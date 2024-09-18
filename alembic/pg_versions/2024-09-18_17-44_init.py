@@ -1,8 +1,8 @@
-"""Add models
+"""init
 
-Revision ID: ae3819551712
-Revises: e4f723f29606
-Create Date: 2024-09-09 15:13:11.175395
+Revision ID: 1127b3fb9608
+Revises: 
+Create Date: 2024-09-18 17:44:32.132434
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'ae3819551712'
-down_revision: Union[str, None] = 'e4f723f29606'
+revision: str = '1127b3fb9608'
+down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -26,10 +26,40 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
     )
+    op.create_table('user',
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('avatar', sa.String(length=50), nullable=True),
+    sa.Column('first_name', sa.String(length=50), nullable=False),
+    sa.Column('last_name', sa.String(length=50), nullable=False),
+    sa.Column('username', sa.String(length=50), nullable=False),
+    sa.Column('email', sa.String(length=50), nullable=False),
+    sa.Column('date_of_birth', sa.Date(), nullable=False),
+    sa.Column('created_on', sa.DateTime(), nullable=True),
+    sa.Column('updated_on', sa.DateTime(), nullable=True),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('email'),
+    sa.UniqueConstraint('username')
+    )
     op.create_table('wishlist',
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_on', sa.DateTime(), nullable=True),
     sa.Column('updated_on', sa.DateTime(), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('cart',
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('user_id', sa.UUID(), nullable=True),
+    sa.Column('total', sa.Double(), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('order',
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('customer_id', sa.UUID(), nullable=True),
+    sa.Column('total', sa.Double(), nullable=False),
+    sa.Column('date_placed', sa.DateTime(), nullable=True),
+    sa.Column('deliver_date', sa.DateTime(), nullable=False),
+    sa.ForeignKeyConstraint(['customer_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('shop',
@@ -37,6 +67,14 @@ def upgrade() -> None:
     sa.Column('name', sa.String(length=50), nullable=False),
     sa.Column('owner', sa.UUID(), nullable=True),
     sa.ForeignKeyConstraint(['owner'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('paymentdetails',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('order_id', sa.UUID(), nullable=True),
+    sa.Column('status', sa.String(length=50), nullable=False),
+    sa.Column('povider', sa.String(length=50), nullable=False),
+    sa.ForeignKeyConstraint(['order_id'], ['order.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('product',
@@ -48,6 +86,24 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['shop_id'], ['shop.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
+    )
+    op.create_table('cart_item',
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('cart_id', sa.UUID(), nullable=True),
+    sa.Column('product_id', sa.UUID(), nullable=True),
+    sa.Column('quantity', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['cart_id'], ['cart.id'], ),
+    sa.ForeignKeyConstraint(['product_id'], ['product.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('order_product',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('order_id', sa.UUID(), nullable=False),
+    sa.Column('product_id', sa.UUID(), nullable=False),
+    sa.Column('quantity', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['order_id'], ['order.id'], ),
+    sa.ForeignKeyConstraint(['product_id'], ['product.id'], ),
+    sa.PrimaryKeyConstraint('id', 'order_id', 'product_id')
     )
     op.create_table('product_category',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -82,8 +138,14 @@ def downgrade() -> None:
     op.drop_table('productsku')
     op.drop_table('product_wishlist')
     op.drop_table('product_category')
+    op.drop_table('order_product')
+    op.drop_table('cart_item')
     op.drop_table('product')
+    op.drop_table('paymentdetails')
     op.drop_table('shop')
+    op.drop_table('order')
+    op.drop_table('cart')
     op.drop_table('wishlist')
+    op.drop_table('user')
     op.drop_table('category')
     # ### end Alembic commands ###

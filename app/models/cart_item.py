@@ -8,7 +8,6 @@ class Cart_Item(Base):
     __tablename__ = "cart_item"
 
     id = Column(UUID, primary_key=True)
-    cart_id = Column(Integer, ForeignKey('cart.id'))
-    cart = relationship("Cart")
-    product_id = relationship("User", backref='cart', uselist=False)
+    cart_id = Column(UUID, ForeignKey('cart.id'))
+    product_id = Column(UUID, ForeignKey('product.id'))
     quantity = Column(Integer, nullable=False)

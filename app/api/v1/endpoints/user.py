@@ -1,6 +1,7 @@
 from typing import List
 
 from fastapi import APIRouter, Depends, status
+from pydantic import UUID4
 from sqlalchemy.orm import Session
 
 import app.services.user as service
@@ -12,7 +13,7 @@ router = APIRouter()
 
 
 @router.post(
-    "/",
+    "/create",
     response_model=UserOut,
     status_code=status.HTTP_201_CREATED,
     summary="Создает пользователя",
@@ -25,7 +26,7 @@ def create_user(
     # Ответ:
     | Параметр | Тип | Описание |
     |----------|-----|----------|
-    | id | int | id страны. |
+    | id       | int |id страны.|
     | name | str | Название страны. |
     ```
     {
@@ -41,10 +42,10 @@ def create_user(
 
 
 @router.get(
-    "/",
+    "/get",
     status_code=status.HTTP_200_OK,
     response_model=List[UserOut],
-    summary="Возвращает все страны",
+    summary="Возвращает всех пользователей",
 )
 async def get_all_users(
     db: Session = Depends(get_db_pg),
@@ -70,3 +71,20 @@ async def get_all_users(
     """
 
     return service.get_all_users(db=db)
+
+
+@router.get(
+    "/get/{user_uuid}",
+    status_code=status.HTTP_200_OK,
+    response_model=UserOut,
+    summary="Возвращает пользователя по uuid",
+)
+async def get_user(
+    user_uuid: UUID4,
+    db: Session = Depends(get_db_pg),
+) -> List[User]:
+    """
+
+    """
+
+    return service.get_user(user_uuid=user_uuid, db=db)
