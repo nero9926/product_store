@@ -1,8 +1,10 @@
+import re
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config, pool
+from sqlalchemy import create_engine  # engine_from_config, pool
 
 from alembic import context
+from app.core.config import settings
 from app.db.base import *
 from app.db.base_class import postgres_metadata
 
@@ -15,6 +17,7 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
+# config.set_main_option('sqlalchemy.url', settings.POSTGRES_URL)
 # add your model's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel
@@ -40,7 +43,16 @@ def run_migrations_offline() -> None:
     script output.
 
     """
+    url_tokens = {
+        "POSTGRES_USER": settings.POSTGRES_USER,
+        "POSTGRES_PASSWORD": settings.POSTGRES_PASSWORD,
+        "POSTGRES_HOST": settings.POSTGRES_HOST,
+        "POSTGRES_PORT": settings.POSTGRES_PORT,
+        "POSTGRES_DB": settings.POSTGRES_DB,
+    }
     url = config.get_main_option("sqlalchemy.url")
+
+    url = re.sub(r"\${(.+?)}", lambda m: url_tokens[m.group(1)], url)
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -59,11 +71,18 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
-    connectable = engine_from_config(
-        config.get_section(config.config_ini_section, {}),
-        prefix="sqlalchemy.",
-        poolclass=pool.NullPool,
-    )
+    url_tokens = {
+        "POSTGRES_USER": settings.POSTGRES_USER,
+        "POSTGRES_PASSWORD": settings.POSTGRES_PASSWORD,
+        "POSTGRES_HOST": settings.POSTGRES_HOST,
+        "POSTGRES_PORT": settings.POSTGRES_PORT,
+        "POSTGRES_DB": settings.POSTGRES_DB,
+    }
+    url = config.get_main_option("sqlalchemy.url")
+
+    url = re.sub(r"\${(.+?)}", lambda m: url_tokens[m.group(1)], url)
+
+    connectable = create_engine(url)
 
     with connectable.connect() as connection:
         context.configure(
