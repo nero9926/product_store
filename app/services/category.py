@@ -19,15 +19,15 @@ def create_category(db: Session, category: CategoryIn) -> CategoryOut:
             raise CategoryAlreadyExists("Category already exists")
         raise
 
-    return CategoryOut(**db_category.__dict__)
+    return db_category
 
 
 def get_all_categories(db: Session) -> List[CategoryOut]:
     all_categories = db.query(models.Category).all()
     # print(TypeAdapter(List[CategoryOut]).dump_python(all_users))
-    return [CategoryOut(**category.__dict__) for category in all_categories]
+    return [category for category in all_categories]
 
 
 def get_category(category_id: int, db: Session) -> List[CategoryOut]:
     category = db.query(models.Category).get({"id": category_id})
-    return CategoryOut(**category.__dict__)
+    return category

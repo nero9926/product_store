@@ -20,15 +20,14 @@ def create_user(db: Session, user: UserIn) -> UserOut:
             raise UserAlreadyExists("User already exists")
         raise
 
-    return UserOut(**db_user.__dict__)
+    return db_user
 
 
 def get_all_users(db: Session) -> List[UserOut]:
     all_users = db.query(models.User).all()
-    # print(TypeAdapter(List[UserOut]).dump_python(all_users))
-    return [UserOut(**user.__dict__) for user in all_users]
+    return [user for user in all_users]
 
 
 def get_user(user_uuid: UUID4, db: Session) -> List[UserOut]:
     user = db.query(models.User).get({"id": user_uuid})
-    return UserOut(**user.__dict__)
+    return user

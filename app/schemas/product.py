@@ -1,13 +1,13 @@
-from pydantic import Field
+from pydantic import UUID4, Field
 
 from app.schemas import BaseSchema
 
 
 class ProductOut(BaseSchema):
-    id: str
+    id: UUID4
     name: str
     description: str
-    categories: str
+    category: int
     wishlists: str
     price: str
     shop_id: str
@@ -18,9 +18,9 @@ class ProductOut(BaseSchema):
 class ProductIn(BaseSchema):
     name: str = Field()
     description: str = Field(default=None)
-    categories: str = Field(default=None)
-    wishlists: str = Field(default=None)
-    price: str = Field()
+    category: int = Field(default=None)
+    # wishlists: str = Field(default=None)
+    price: float = Field()
     shop_id: str = Field(default=None)
-    orders: str = Field(default=None)
-    sku: str = Field()
+    # orders: str = Field(default=None)
+    # sku: str = Field()

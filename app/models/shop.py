@@ -11,5 +11,6 @@ class Shop(Base):
 
     id = Column(UUID, default=uuid_pkg.uuid4, primary_key=True, nullable=False)
     name = Column(String(50), nullable=False)
-    owner = Column(UUID, ForeignKey("user.id"), nullable=False)
-    products = relationship("Product")
+    owner_id = Column(UUID, ForeignKey("user.id"), nullable=False)
+    owner = relationship("User", back_populates="shops", uselist=False)
+    products = relationship("Product", back_populates="shop")

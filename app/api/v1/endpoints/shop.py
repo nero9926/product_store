@@ -41,7 +41,7 @@ async def get_all_shops(
 
 
 @router.get(
-    "/get/{shop_id}",
+    "/get/{shop_uuid}",
     status_code=status.HTTP_200_OK,
     response_model=ShopOut,
     summary="Возвращает магазин по uuid",

@@ -9,7 +9,7 @@ class Category(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, unique=True)
-    products = relationship("Product_Category", backref="category")
+    products = relationship("Product", backref="category")
 
     def __repr__(self) -> str:
         return f"{self.id} {self.name}"

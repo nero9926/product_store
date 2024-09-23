@@ -18,6 +18,7 @@ class User(Base):
     email = Column(String(50), nullable=False, unique=True)
     date_of_birth = Column(Date(), nullable=False)
     orders = relationship("Order")
+    shops = relationship("Shop", back_populates="owner")
     wishlist = relationship("Wishlist", backref='user', uselist=False)
     created_on = Column(DateTime(), default=datetime.now)
     updated_on = Column(DateTime(), default=datetime.now,

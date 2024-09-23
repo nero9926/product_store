@@ -20,15 +20,14 @@ def create_shop(db: Session, shop: ShopIn) -> ShopOut:
             raise ShopAlreadyExists("Shop already exists")
         raise
 
-    return ShopOut(**db_shop.__dict__)
+    return db_shop
 
 
 def get_all_shops(db: Session) -> List[ShopOut]:
     all_shops = db.query(models.Shop).all()
-    # print(TypeAdapter(List[ShopOut]).dump_python(all_users))
-    return [ShopOut(**shop.__dict__) for shop in all_shops]
+    return [shop for shop in all_shops]
 
 
 def get_shop(shop_uuid: UUID4, db: Session) -> List[ShopOut]:
     shop = db.query(models.Shop).get({"id": shop_uuid})
-    return ShopOut(**shop.__dict__)
+    return shop
