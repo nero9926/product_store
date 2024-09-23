@@ -8,7 +8,7 @@ from app.models.order import Order
 from app.models.order_product import Order_Product
 from app.models.payment_details import PaymentDetails
 from app.models.product import Product
-from app.models.product_category import Product_Category
+# from app.models.product_category import Product_Category
 from app.models.product_sku import ProductSku
 from app.models.product_wishlist import Product_Wishlist
 from app.models.shop import Shop

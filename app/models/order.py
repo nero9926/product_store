@@ -1,6 +1,7 @@
-from datetime import datetime
+import uuid as uuid_pkg
+from datetime import date, datetime, timedelta
 
-from sqlalchemy import UUID, Column, DateTime, Double, ForeignKey
+from sqlalchemy import UUID, Column, Date, DateTime, Double, ForeignKey
 from sqlalchemy.orm import relationship
 
 from app.db.base_class import Base
@@ -9,11 +10,12 @@ from app.db.base_class import Base
 class Order(Base):
     __tablename__ = "order"
 
-    id = Column(UUID, primary_key=True)
+    id = Column(UUID, default=uuid_pkg.uuid4, primary_key=True)
     customer_id = Column(UUID, ForeignKey('user.id'))
     total = Column(Double, nullable=False)
     date_placed = Column(DateTime(), default=datetime.now)
-    deliver_date = Column(DateTime(), nullable=False)
+    deliver_date = Column(Date(), default=date.today() +
+                          timedelta(days=7), nullable=False)
     products = relationship("Order_Product", backref="order")
     payment_details_id = relationship(
         "PaymentDetails", backref="order", uselist=False)
