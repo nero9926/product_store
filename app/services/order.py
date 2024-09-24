@@ -11,16 +11,16 @@ from app.schemas.order import OrderIn, OrderOut
 
 def create_order(db: Session, order: OrderIn) -> OrderOut:
     total = 0
-    for product_uuid in order.products:
+    for product_uuid in order.products_ids:
         product_db = db.query(models.Product).get({"id": product_uuid})
         total += product_db.price
     order_dict = order.model_dump()
     order_dict["total"] = total
-    del order_dict['products']
+    del order_dict['products_ids']
     db_order = models.Order(**order_dict)
     try:
         models.save(db=db, data=db_order)
-        for product_uuid in order.products:
+        for product_uuid in order.products_ids:
             product_db = db.query(models.Product).get({"id": product_uuid})
             order_products = {
                 "order_id": db_order.id,

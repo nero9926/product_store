@@ -1,4 +1,4 @@
-from typing import List
+from typing import Annotated, List
 
 from fastapi import APIRouter, Depends, status
 from pydantic import UUID4
@@ -19,22 +19,9 @@ router = APIRouter()
     summary="Создает пользователя",
 )
 def create_user(
-    user: UserIn,
+    user: Annotated[UserIn, Depends()],
     db: Session = Depends(get_db_pg),
 ) -> UserOut:
-    """
-    # Ответ:
-    | Параметр | Тип | Описание |
-    |----------|-----|----------|
-    | id       | int |id страны.|
-    | name | str | Название страны. |
-    ```
-    {
-        "id": 1,
-        "name": "Russia"
-    }
-    ```
-    """
     return service.create_user(
         db=db,
         user=user,

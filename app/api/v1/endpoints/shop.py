@@ -1,4 +1,4 @@
-from typing import List
+from typing import Annotated, List
 
 from fastapi import APIRouter, Depends, status
 from pydantic import UUID4
@@ -19,7 +19,7 @@ router = APIRouter()
     summary="Создает магазин",
 )
 def create_shop(
-    shop: ShopIn,
+    shop: Annotated[ShopIn, Depends()],
     db: Session = Depends(get_db_pg),
 ) -> ShopOut:
     return service.create_shop(

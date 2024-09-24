@@ -8,12 +8,11 @@ from app.schemas.product import ProductOutMin
 
 
 class OrderProductOut(BaseSchema):
-    id: int
+    id: UUID4
     order_id: UUID4
-    product_id: UUID4
+    product: ProductOutMin
     quantity: int
 
 
-# class OrderIn(BaseSchema):
-#     customer_id: UUID4 = Field()
+# class OrderProductIn(BaseSchema):
 #     products: Optional[List[UUID4]] = Field()

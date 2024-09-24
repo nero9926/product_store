@@ -11,7 +11,7 @@ from app.schemas.user import UserIn, UserOut
 
 
 def create_user(db: Session, user: UserIn) -> UserOut:
-    db_user = models.User(**user.dict())
+    db_user = models.User(**user.model_dump())
     try:
         models.save(db=db, data=db_user)
     except IntegrityError as e:

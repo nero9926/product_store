@@ -1,4 +1,4 @@
-from typing import List
+from typing import Annotated, List
 
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
@@ -18,7 +18,7 @@ router = APIRouter()
     summary="Создает категорию",
 )
 def create_category(
-    category: CategoryIn,
+    category: Annotated[CategoryIn, Depends()],
     db: Session = Depends(get_db_pg),
 ) -> CategoryOut:
 
@@ -51,8 +51,4 @@ async def get_category(
     category_id: int,
     db: Session = Depends(get_db_pg),
 ) -> List[Category]:
-    """
-
-    """
-
     return service.get_category(category_id=category_id, db=db)

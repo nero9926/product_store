@@ -18,5 +18,5 @@ class OrderOut(BaseSchema):
 
 
 class OrderIn(BaseSchema):
-    customer_id: UUID4 = Field()
-    products: Optional[List[UUID4]] = Field()
+    customer_id: UUID4
+    products_ids: List[UUID4]

@@ -10,7 +10,7 @@ from app.schemas.category import CategoryIn, CategoryOut
 
 
 def create_category(db: Session, category: CategoryIn) -> CategoryOut:
-    db_category = models.Category(**category.dict())
+    db_category = models.Category(**category.model_dump())
     try:
         models.save(db=db, data=db_category)
     except IntegrityError as e:

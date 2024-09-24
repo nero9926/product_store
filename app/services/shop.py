@@ -11,7 +11,7 @@ from app.schemas.shop import ShopIn, ShopOut
 
 
 def create_shop(db: Session, shop: ShopIn) -> ShopOut:
-    db_shop = models.Shop(**shop.dict())
+    db_shop = models.Shop(**shop.model_dump())
     try:
         models.save(db=db, data=db_shop)
     except IntegrityError as e:
