@@ -28,7 +28,14 @@ def create_order(
         order=order,
     )
     # send to RMQ
-    mq.publish_notification({'order_uuid': created_order.id})
+    mq.publish_order(
+        {
+            'order_uuid': created_order.id,
+            'order_status': created_order.status,
+            'deliver_date': created_order.deliver_date,
+            'total': created_order.total,
+        }
+    )
     return created_order
 
 
@@ -55,17 +62,3 @@ async def get_order(
     db: Session = Depends(get_db_pg),
 ) -> List[Order]:
     return service.get_order(order_uuid=order_uuid, db=db)
-
-
-@router.get(
-    "/get_messages/",
-    response_model=None,
-    status_code=status.HTTP_200_OK,
-    summary="Возвращает сообщения",
-)
-async def get_messages(
-    # db: Session = Depends(get_db_pg),
-) -> List[Order]:
-    mq.consume_messages()
-    return
-    # return service.get_order(order_uuid=order_uuid, db=db)

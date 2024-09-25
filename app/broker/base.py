@@ -1,11 +1,12 @@
 import json
 import os
 import sys
+import time
 
 import pika
+import pika.exceptions
 
 # from asgiref.sync import async_to_sync
-# from src.notification.websocket_manager import manager
 from app.core.config import settings
 from app.helpers.encoders import UUIDEncoder
 
@@ -14,6 +15,7 @@ class MessageQueue:
     def __init__(self) -> None:
         self.credentials = pika.PlainCredentials(
             settings.RABBITMQ_USER, settings.RABBITMQ_PASSWORD)
+
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(
             host=settings.RABBITMQ_HOST, port=settings.RABBITMQ_PORT,
             credentials=self.credentials))
@@ -29,17 +31,37 @@ class MessageQueue:
         )
         self.channel.basic_qos(prefetch_count=1)
 
+    def connect_to_rabbitmq(self):
+        # Connect to RabbitMQ
+        while True:
+            try:
+                self.connection = pika.BlockingConnection(
+                    pika.ConnectionParameters(
+                        host=settings.RABBITMQ_HOST,
+                        port=settings.RABBITMQ_PORT,
+                        credentials=self.credentials
+                    )
+                )
+            except pika.exceptions.AMQPConnectionError:
+                print("Failed to connect to RabbitMQ. Retrying in 5 seconds...")
+                time.sleep(5)
+
     # PUBLISHING MESSAGES TO THE QUEUE
-    def publish_notification(self, message: dict):
-        # publishing to the queue
-        self.channel.basic_publish(
-            exchange=self.exchange,
-            routing_key="order",
-            body=json.dumps(message, cls=UUIDEncoder),
-        )
-        return True
+    def publish_order(self, message: dict):
+        try:
+            # publishing to the queue
+            self.channel.basic_publish(
+                exchange=self.exchange,
+                routing_key="order",
+                body=json.dumps(message, indent=4, sort_keys=True,
+                                default=str, cls=UUIDEncoder),
+            )
+            return True
+        except pika.exceptions.StreamLostError:
+            self.connect()
 
     # CONSUMER (BUT LARGELY INACTIVE)
+
     def consume_messages(self):
         try:
             print("messages are now consumed")
@@ -106,9 +128,9 @@ class MessageQueue:
 
     # CLOSING CONNECTIONS
 
-    def __del__(self):
-        # try catch exceptions
-        self.connection.close()
+    # def __del__(self):
+    #     # try catch exceptions
+    #     self.connection.close()
 
 
 mq = MessageQueue()
