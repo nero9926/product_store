@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from pydantic import UUID4, Field
 
@@ -11,6 +11,7 @@ class OrderOut(BaseSchema):
     id: UUID4
     customer_id: UUID4
     total: float
+    status: str
     date_placed: datetime
     deliver_date: datetime
     products: Optional[List[OrderProductOut]]

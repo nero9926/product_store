@@ -14,7 +14,7 @@ class ProductOut(BaseSchema):
     wishlists: List
     price: float
     shop_id: UUID4
-    orders: List
+    # orders: Optional[List[OrderProductOut]]
     sku: ProductSkuOut
 
 

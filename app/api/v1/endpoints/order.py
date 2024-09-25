@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 import app.services.order as service
 from app.api.deps import get_db_pg
+from app.broker.base import mq
 from app.models.order import Order
 from app.schemas.order import OrderIn, OrderOut
 
@@ -21,11 +22,14 @@ router = APIRouter()
 def create_order(
     order: OrderIn,
     db: Session = Depends(get_db_pg),
-) -> OrderOut:
-    return service.create_order(
+) -> dict:
+    created_order = service.create_order(
         db=db,
         order=order,
     )
+    # send to RMQ
+    mq.publish_notification({'order_uuid': created_order.id})
+    return created_order
 
 
 @router.get(
@@ -51,3 +55,17 @@ async def get_order(
     db: Session = Depends(get_db_pg),
 ) -> List[Order]:
     return service.get_order(order_uuid=order_uuid, db=db)
+
+
+@router.get(
+    "/get_messages/",
+    response_model=None,
+    status_code=status.HTTP_200_OK,
+    summary="Возвращает сообщения",
+)
+async def get_messages(
+    # db: Session = Depends(get_db_pg),
+) -> List[Order]:
+    mq.consume_messages()
+    return
+    # return service.get_order(order_uuid=order_uuid, db=db)
