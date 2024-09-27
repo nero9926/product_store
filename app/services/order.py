@@ -48,3 +48,10 @@ def get_all_orders(db: Session) -> List[OrderOut]:
 def get_order(order_id: int, db: Session) -> List[OrderOut]:
     order = db.query(models.Order).get({"id": order_id})
     return order
+
+
+def patch_order(order_id: int, payload: dict, db: Session) -> List[OrderOut]:
+    order_db = db.query(models.Order).get({"id": order_id})
+    updated_item = order_db.copy(update=payload)
+    models.save(db=db, data=updated_item)
+    return updated_item

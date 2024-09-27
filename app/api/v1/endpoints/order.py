@@ -28,7 +28,7 @@ def create_order(
         order=order,
     )
     # send to RMQ
-    mq.publish_order(
+    mq.send_notification(
         {
             'order_uuid': created_order.id,
             'order_status': created_order.status,
@@ -36,6 +36,11 @@ def create_order(
             'total': created_order.total,
         }
     )
+    # mq.send_order(
+    #     {
+    #         'order_uuid': created_order.id,
+    #     }
+    # )
     return created_order
 
 
