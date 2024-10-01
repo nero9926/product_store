@@ -21,3 +21,7 @@ async def errors_handling(
         return await call_next(request)
     except BusinessException as e:
         return JSONResponse(status_code=422, content={"msg": str(e)})
+
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0')
