@@ -1,9 +1,9 @@
 FROM python:3.11
 ENV PYTHONUNBUFFERED 1
 
-COPY requirements.txt ./requirements.txt
+COPY requirements.txt /requirements.txt
 
-RUN pip install -r requirements.txt
+RUN pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org -r /requirements.txt
 
 ENV PYTHONPATH=/app
 WORKDIR /app
