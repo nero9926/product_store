@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     POSTGRES_HOST: str
     POSTGRES_PORT: str
     POSTGRES_DB: str
+    PGDATA: str
 
     # RABBITMQ
     RABBITMQ_USER: str

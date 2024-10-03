@@ -1,14 +1,19 @@
 version: "3.8"
 services:
-  web:
-    build: .
+  backend:
+    build:
+      context: .
+    container_name: "fastapi_app"
+    restart: always
     volumes:
       - "./:/app"
     depends_on:
-      - postgres
+      - db
       - rabbitmq
     environment:
       APP_UVICORN_OPTIONS: "--reload --reload-dir app --host 0.0.0.0 --port=8000"
+    ports:
+      - 80:8000
     env_file:
       - .env
 
@@ -16,23 +21,33 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: "queue"
+    restart: always
     depends_on:
-      - postgres
+      - db
       - rabbitmq
     command: "python -u consumer.py"
 
-  postgres:
+  db:
     image: postgres:12.9
+    container_name: "db"
+    command: -p 5432
     volumes:
-      - postgres:/var/lib/postgresql/data/pgdata
+      - postgres:/var/lib/postgresql/data/some_data
     env_file:
       - .env
     ports:
       - 5432:5432
 
+    # environment:
+    #   - POSTGRES_USER=movie_db_username
+    #   - POSTGRES_PASSWORD=movie_db_password
+    #   - POSTGRES_DB=movie_db_dev
+
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: "rabbitmq"
+    restart: always
     environment:
       - RABBITMQ_DEFAULT_USER=admin
       - RABBITMQ_DEFAULT_PASS=admin
