@@ -13,7 +13,6 @@ load_dotenv()
 
 
 def main():
-
     session = SessionLocalPG()
 
     # rabbitmq connection
@@ -34,12 +33,7 @@ def main():
             db_instance.status = 'in_work'
             session.add(db_instance)
             session.commit()
-
-            print('cheking....')
-            order['order_status'] = 'in_work'
-            # changed_order = patch_order(order_uuid=order.order_uuid,
-            #                             payload=payload, db=get_db_pg)
-            print(order)
+            print(f'order {order["order_uuid"]} in work!')
             ch.basic_ack(delivery_tag=method.delivery_tag)
         except Exception as e:
             print(f"Error processing message: {e}")
