@@ -15,4 +15,6 @@ COPY docker-entrypoint.sh ./docker-entrypoint.sh
 RUN chmod +x ./docker-entrypoint.sh && \
 	ln -s ./docker-entrypoint.sh /
 
+# RUN alembic -n postgres revision --autogenerate -m "init" && alembic -n postgres upgrade head
+
 # ENTRYPOINT ["sh", "./docker-entrypoint.sh" ]

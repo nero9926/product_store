@@ -39,9 +39,9 @@ services:
       - 5432:5432
 
   rabbitmq:
-    image: rabbitmq:3-management-alpine
+    image: rabbitmq:4.0-management
     container_name: "rabbitmq"
-    hostname: "rabbitmq"
+    # hostname: "rabbitmq"
     restart: always
     environment:
       - RABBITMQ_DEFAULT_USER=admin
