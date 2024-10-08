@@ -27,6 +27,17 @@ services:
       - db
       - rabbitmq
 
+  notification_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: "notifications"
+    command: "python -u app/notification_service/main.py"
+    restart: always
+    depends_on:
+      - db
+      - rabbitmq
+
   db:
     image: postgres:12.9
     container_name: "db"
