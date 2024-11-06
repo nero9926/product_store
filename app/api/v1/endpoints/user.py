@@ -19,7 +19,7 @@ router = APIRouter()
     summary="Создает пользователя",
 )
 def create_user(
-    user: Annotated[UserIn, Depends()],
+    user: UserIn,
     db: Session = Depends(get_db_pg),
 ) -> UserOut:
     return service.create_user(
@@ -37,6 +37,7 @@ def create_user(
 async def get_all_users(
     db: Session = Depends(get_db_pg),
 ) -> List[User]:
+    print(db)
     return service.get_all_users(db=db)
 
 
@@ -50,8 +51,4 @@ async def get_user(
     user_uuid: UUID4,
     db: Session = Depends(get_db_pg),
 ) -> List[User]:
-    """
-
-    """
-
     return service.get_user(user_uuid=user_uuid, db=db)

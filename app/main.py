@@ -10,6 +10,7 @@ app = FastAPI(
     title="product_store",
     openapi_url="/v1/openapi.json",
 )
+app.dependency_overrides = {}
 app.include_router(api_router, prefix="/v1")
 
 

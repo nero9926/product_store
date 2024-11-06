@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 import app.services.order as service
 from app.api.deps import get_db_pg
-from app.broker.base import mq
+# from app.broker.base import mq
 from app.models.order import Order
 from app.schemas.order import OrderIn, OrderOut
 
@@ -28,14 +28,14 @@ def create_order(
         order=order,
     )
     # send to RMQ
-    mq.send_notification(
-        {
-            'order_uuid': created_order.id,
-            'order_status': created_order.status,
-            'deliver_date': created_order.deliver_date,
-            'total': created_order.total,
-        }
-    )
+    # mq.send_notification(
+    #     {
+    #         'order_uuid': created_order.id,
+    #         'order_status': created_order.status,
+    #         'deliver_date': created_order.deliver_date,
+    #         'total': created_order.total,
+    #     }
+    # )
     # mq.send_order(
     #     {
     #         'order_uuid': created_order.id,
