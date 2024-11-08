@@ -22,7 +22,7 @@ router = APIRouter()
 def create_order(
     order: OrderIn,
     db: Session = Depends(get_db_pg),
-) -> dict:
+) -> OrderOut:
     created_order = service.create_order(
         db=db,
         order=order,
@@ -52,7 +52,7 @@ def create_order(
 )
 async def get_all_orders(
     db: Session = Depends(get_db_pg),
-) -> List[Order]:
+) -> List[OrderOut]:
     return service.get_all_orders(db=db)
 
 
@@ -65,5 +65,5 @@ async def get_all_orders(
 async def get_order(
     order_uuid: UUID4,
     db: Session = Depends(get_db_pg),
-) -> List[Order]:
-    return service.get_order(order_uuid=order_uuid, db=db)
+) -> List[OrderOut]:
+    return service.get_order(order_id=order_uuid, db=db)
